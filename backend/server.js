@@ -10,7 +10,13 @@ const app = express();
 const PORT = process.env.PORT || 5050;
 
 // Middleware
-app.use(cors()); // Allow frontend to connect
+app.use(cors({
+  origin: [
+    'http://localhost:3000',
+    'https://findmeme-frontend.onrender.com'
+  ],
+  credentials: true
+})); // Allow frontend to connect
 app.use(express.json()); // Parse JSON requests
 app.use(express.urlencoded({ extended: true })); // Parse form data
 
