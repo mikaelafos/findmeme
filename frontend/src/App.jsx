@@ -66,72 +66,75 @@ function App() {
 
       {/* Header */}
       <header className="glass shadow-xl sticky top-0 z-50 animate-slideDown">
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-6">
-              <h1
-                className="text-3xl font-bold gradient-text cursor-pointer transition hover:scale-105"
-                onClick={() => setCurrentView('home')}
-              >
-                🎭 FindMeme
-              </h1>
+        <div className="max-w-7xl mx-auto px-4 py-4 md:py-6">
+          {/* Top row: Logo and Auth buttons */}
+          <div className="flex items-center justify-between mb-3 md:mb-4">
+            <h1
+              className="text-2xl md:text-3xl font-bold gradient-text cursor-pointer transition hover:scale-105"
+              onClick={() => setCurrentView('home')}
+            >
+              🎭 FindMeme
+            </h1>
 
-              {/* Navigation */}
-              <nav className="flex gap-2">
-                <button
-                  onClick={() => setCurrentView('home')}
-                  className={`px-4 py-2 rounded-lg transition font-medium ${
-                    currentView === 'home'
-                      ? 'btn-primary'
-                      : 'text-gray-600 hover:bg-gray-100'
-                  }`}
-                >
-                  🏠 Browse
-                </button>
-                {user && (
-                  <button
-                    onClick={() => setCurrentView('favorites')}
-                    className={`px-4 py-2 rounded-lg transition font-medium ${
-                      currentView === 'favorites'
-                        ? 'btn-primary'
-                        : 'text-gray-600 hover:bg-gray-100'
-                    }`}
-                  >
-                    ❤️ Favorites
-                  </button>
-                )}
-              </nav>
-            </div>
-
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 md:gap-3">
               {user ? (
                 <>
-                  <span className="text-gray-700 font-medium">👋 {user.username}</span>
-                  {currentView === 'home' && (
-                    <button
-                      onClick={() => setShowUpload(!showUpload)}
-                      className="btn-primary"
-                    >
-                      {showUpload ? '✕ Close' : '📤 Upload'}
-                    </button>
-                  )}
+                  <span className="text-gray-700 font-medium text-sm md:text-base hidden sm:inline">
+                    👋 {user.username}
+                  </span>
                   <button
                     onClick={handleLogout}
-                    className="btn-secondary"
+                    className="btn-secondary text-sm md:text-base px-3 py-2 md:px-4 md:py-2"
                   >
-                    🚪 Logout
+                    🚪 <span className="hidden sm:inline">Logout</span>
                   </button>
                 </>
               ) : (
                 <button
                   onClick={() => setShowAuthModal(true)}
-                  className="btn-primary"
+                  className="btn-primary text-sm md:text-base px-3 py-2 md:px-4 md:py-2"
                 >
-                  🔐 Login / Sign Up
+                  🔐 <span className="hidden sm:inline">Login / Sign Up</span>
                 </button>
               )}
             </div>
           </div>
+
+          {/* Bottom row: Navigation */}
+          <nav className="flex gap-2 flex-wrap">
+            <button
+              onClick={() => setCurrentView('home')}
+              className={`px-3 py-2 md:px-4 md:py-2 rounded-lg transition font-medium text-sm md:text-base ${
+                currentView === 'home'
+                  ? 'btn-primary'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              🏠 Browse
+            </button>
+            {user && (
+              <>
+                <button
+                  onClick={() => setCurrentView('favorites')}
+                  className={`px-3 py-2 md:px-4 md:py-2 rounded-lg transition font-medium text-sm md:text-base ${
+                    currentView === 'favorites'
+                      ? 'btn-primary'
+                      : 'text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  ❤️ Favorites
+                </button>
+                {currentView === 'home' && (
+                  <button
+                    onClick={() => setShowUpload(!showUpload)}
+                    className="btn-primary text-sm md:text-base px-3 py-2 md:px-4 md:py-2"
+                  >
+                    {showUpload ? '✕ Close' : '📤 Upload'}
+                  </button>
+                )}
+              </>
+            )}
+          </nav>
         </div>
       </header>
 
@@ -169,11 +172,11 @@ function App() {
 
             {/* Empty State */}
             {!loading && memes.length === 0 && (
-              <div className="text-center py-12 animate-fadeIn">
-                <div className="glass p-12 rounded-2xl max-w-md mx-auto">
-                  <div className="text-6xl mb-4">🎭</div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">No memes found</h3>
-                  <p className="text-gray-600">
+              <div className="text-center py-8 md:py-12 animate-fadeIn">
+                <div className="glass p-6 md:p-12 rounded-2xl max-w-md mx-auto">
+                  <div className="text-5xl md:text-6xl mb-4">🎭</div>
+                  <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">No memes found</h3>
+                  <p className="text-sm md:text-base text-gray-600">
                     {searchTerm || filterType
                       ? 'Try adjusting your search or filters'
                       : 'Upload some memes to get started!'}
