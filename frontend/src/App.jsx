@@ -4,6 +4,7 @@ import SearchBar from './components/SearchBar'
 import UploadForm from './components/UploadForm'
 import AuthModal from './components/AuthModal'
 import Favorites from './pages/Favorites'
+import AdminPanel from './pages/AdminPanel'
 
 function App() {
   const [memes, setMemes] = useState([])
@@ -13,7 +14,7 @@ function App() {
   const [loading, setLoading] = useState(false)
   const [user, setUser] = useState(null)
   const [showAuthModal, setShowAuthModal] = useState(false)
-  const [currentView, setCurrentView] = useState('home') // 'home' or 'favorites'
+  const [currentView, setCurrentView] = useState('home') // 'home', 'favorites', or 'admin'
 
   // Check if user is logged in on mount
   useEffect(() => {
@@ -68,19 +69,33 @@ function App() {
       <header className="bg-white shadow-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 sm:h-20">
-            {/* Left: Favorites */}
-            {user && (
-              <button
-                onClick={() => setCurrentView('favorites')}
-                className={`text-lg sm:text-xl font-serif italic transition ${
-                  currentView === 'favorites'
-                    ? 'text-gray-900 underline'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                favorites
-              </button>
-            )}
+            {/* Left: Favorites or Admin */}
+            <div className="flex items-center gap-3 sm:gap-4">
+              {user && (
+                <button
+                  onClick={() => setCurrentView('favorites')}
+                  className={`text-lg sm:text-xl font-serif italic transition ${
+                    currentView === 'favorites'
+                      ? 'text-gray-900 underline'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  favorites
+                </button>
+              )}
+              {user?.isAdmin && (
+                <button
+                  onClick={() => setCurrentView('admin')}
+                  className={`text-lg sm:text-xl font-serif italic transition ${
+                    currentView === 'admin'
+                      ? 'text-gray-900 underline'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  admin
+                </button>
+              )}
+            </div>
             {!user && <div className="w-20"></div>}
 
             {/* Center: FindMeme logo */}
@@ -174,8 +189,10 @@ function App() {
               <MemeGrid memes={memes} onDelete={fetchMemes} />
             )}
           </div>
-        ) : (
+        ) : currentView === 'favorites' ? (
           <Favorites />
+        ) : (
+          <AdminPanel />
         )}
       </main>
     </div>
