@@ -24,11 +24,13 @@ app.use(express.urlencoded({ extended: true })); // Parse form data
 const memesRouter = require('./routes/memes');
 const authRouter = require('./routes/auth');
 const favoritesRouter = require('./routes/favorites');
+const adminRouter = require('./routes/admin');
 
 // Use routes
 app.use('/api/memes', memesRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/favorites', favoritesRouter);
+app.use('/api/admin', adminRouter);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

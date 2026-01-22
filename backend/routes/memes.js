@@ -30,6 +30,9 @@ router.get('/', async (req, res) => {
     const conditions = [];
     const values = [];
 
+    // Always filter for approved memes only (non-admins can only see approved)
+    conditions.push(`m.status = 'approved'`);
+
     // Add search filter
     if (search) {
       conditions.push(`(m.title ILIKE $${values.length + 1} OR EXISTS (
@@ -86,10 +89,10 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// POST new meme (admin only - we'll add auth later)
+// POST new meme - submissions go to pending for approval
 router.post('/', upload.single('file'), async (req, res) => {
   try {
-    const { title, media_type, tags } = req.body;
+    const { title, media_type, tags, user_id } = req.body;
 
     let media_url = 'https://via.placeholder.com/400';
 
@@ -107,10 +110,10 @@ router.post('/', upload.single('file'), async (req, res) => {
       media_url = uploadResult.secure_url;
     }
 
-    // Insert meme
+    // Insert meme with 'pending' status for user submissions
     const memeResult = await pool.query(
-      'INSERT INTO memes (title, media_url, media_type) VALUES ($1, $2, $3) RETURNING *',
-      [title, media_url, media_type]
+      'INSERT INTO memes (title, media_url, media_type, status, user_id) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+      [title, media_url, media_type, 'pending', user_id || null]
     );
 
     const meme = memeResult.rows[0];
