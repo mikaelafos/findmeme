@@ -73,7 +73,7 @@ function App() {
               className="text-2xl md:text-3xl font-bold gradient-text cursor-pointer transition hover:scale-105"
               onClick={() => setCurrentView('home')}
             >
-              🎭 FindMeme
+              🎭 FindMeme v2
             </h1>
 
             <div className="flex items-center gap-2 md:gap-3">
