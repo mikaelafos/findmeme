@@ -1,39 +1,27 @@
 function SearchBar({ searchTerm, onSearchChange, filterType, onFilterChange }) {
   return (
-    <div className="glass rounded-2xl p-6 mb-8 shadow-xl animate-fadeIn">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="mb-8 sm:mb-12">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
         {/* Search Input */}
-        <div>
-          <label className="block text-sm font-bold text-gray-800 mb-3 flex items-center gap-2">
-            <span>🔍</span>
-            <span>Search Memes</span>
-          </label>
-          <input
-            type="text"
-            placeholder="Search by title or tags..."
-            value={searchTerm}
-            onChange={(e) => onSearchChange(e.target.value)}
-            className="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 focus:border-transparent transition bg-white shadow-sm"
-          />
-        </div>
+        <input
+          type="text"
+          placeholder="search memes..."
+          value={searchTerm}
+          onChange={(e) => onSearchChange(e.target.value)}
+          className="flex-1 px-4 py-2 sm:py-3 border border-gray-300 focus:outline-none focus:border-gray-900 transition font-serif italic text-sm sm:text-base"
+        />
 
         {/* Filter by Type */}
-        <div>
-          <label className="block text-sm font-bold text-gray-800 mb-3 flex items-center gap-2">
-            <span>🎬</span>
-            <span>Filter by Type</span>
-          </label>
-          <select
-            value={filterType}
-            onChange={(e) => onFilterChange(e.target.value)}
-            className="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 focus:border-transparent transition bg-white shadow-sm"
-          >
-            <option value="">🌟 All Types</option>
-            <option value="image">🖼️ Images</option>
-            <option value="gif">✨ GIFs</option>
-            <option value="video">🎥 Videos</option>
-          </select>
-        </div>
+        <select
+          value={filterType}
+          onChange={(e) => onFilterChange(e.target.value)}
+          className="px-4 py-2 sm:py-3 border border-gray-300 focus:outline-none focus:border-gray-900 transition font-serif italic text-sm sm:text-base bg-white"
+        >
+          <option value="">all types</option>
+          <option value="image">images</option>
+          <option value="gif">gifs</option>
+          <option value="video">videos</option>
+        </select>
       </div>
     </div>
   )

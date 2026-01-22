@@ -65,69 +65,57 @@ function App() {
       )}
 
       {/* Header */}
-      <header className="glass shadow-xl sticky top-0 z-50 animate-slideDown">
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-6">
-              <h1
-                className="text-3xl font-bold gradient-text cursor-pointer transition hover:scale-105"
-                onClick={() => setCurrentView('home')}
+      <header className="bg-white shadow-sm sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16 sm:h-20">
+            {/* Left: Favorites */}
+            {user && (
+              <button
+                onClick={() => setCurrentView('favorites')}
+                className={`text-lg sm:text-xl font-serif italic transition ${
+                  currentView === 'favorites'
+                    ? 'text-gray-900 underline'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
               >
-                🎭 FindMeme
-              </h1>
+                favorites
+              </button>
+            )}
+            {!user && <div className="w-20"></div>}
 
-              {/* Navigation */}
-              <nav className="flex gap-2">
-                <button
-                  onClick={() => setCurrentView('home')}
-                  className={`px-4 py-2 rounded-lg transition font-medium ${
-                    currentView === 'home'
-                      ? 'btn-primary'
-                      : 'text-gray-600 hover:bg-gray-100'
-                  }`}
-                >
-                  🏠 Browse
-                </button>
-                {user && (
-                  <button
-                    onClick={() => setCurrentView('favorites')}
-                    className={`px-4 py-2 rounded-lg transition font-medium ${
-                      currentView === 'favorites'
-                        ? 'btn-primary'
-                        : 'text-gray-600 hover:bg-gray-100'
-                    }`}
-                  >
-                    ❤️ Favorites
-                  </button>
-                )}
-              </nav>
-            </div>
+            {/* Center: FindMeme logo */}
+            <h1
+              className="text-3xl sm:text-4xl md:text-5xl font-serif italic cursor-pointer transition hover:opacity-70 absolute left-1/2 transform -translate-x-1/2"
+              onClick={() => setCurrentView('home')}
+            >
+              findmeme
+            </h1>
 
-            <div className="flex items-center gap-3">
+            {/* Right: Login/Logout */}
+            <div className="flex items-center gap-2 sm:gap-3">
               {user ? (
                 <>
-                  <span className="text-gray-700 font-medium">👋 {user.username}</span>
                   {currentView === 'home' && (
                     <button
                       onClick={() => setShowUpload(!showUpload)}
-                      className="btn-primary"
+                      className="text-sm sm:text-base text-gray-600 hover:text-gray-900 transition hidden sm:block"
                     >
-                      {showUpload ? '✕ Close' : '📤 Upload'}
+                      {showUpload ? 'close' : 'upload'}
                     </button>
                   )}
                   <button
                     onClick={handleLogout}
-                    className="btn-secondary"
+                    className="text-lg sm:text-xl font-serif italic text-gray-600 hover:text-gray-900 transition"
                   >
-                    🚪 Logout
+                    logout
                   </button>
                 </>
               ) : (
                 <button
                   onClick={() => setShowAuthModal(true)}
-                  className="btn-primary"
+                  className="text-lg sm:text-xl font-serif italic text-gray-600 hover:text-gray-900 transition"
                 >
-                  🔐 Login / Sign Up
+                  login
                 </button>
               )}
             </div>

@@ -66,9 +66,9 @@ function MemeCard({ meme, onDelete }) {
   }
 
   return (
-    <div className="glass rounded-2xl overflow-hidden card-hover animate-fadeIn">
+    <div className="bg-white border border-gray-200 overflow-hidden transition hover:shadow-lg">
       {/* Media */}
-      <div className="aspect-square bg-gradient-to-br from-purple-200 to-pink-200 flex items-center justify-center relative group">
+      <div className="aspect-square bg-gray-100 flex items-center justify-center relative group">
         {meme.media_type === 'video' ? (
           <video
             src={meme.media_url}
