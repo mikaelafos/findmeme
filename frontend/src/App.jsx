@@ -55,7 +55,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen">
       {/* Auth Modal */}
       {showAuthModal && (
         <AuthModal
@@ -65,69 +65,69 @@ function App() {
       )}
 
       {/* Header */}
-      <header className="bg-white shadow-md">
+      <header className="glass shadow-xl sticky top-0 z-50 animate-slideDown">
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-6">
               <h1
-                className="text-3xl font-bold text-gray-900 cursor-pointer hover:text-blue-600 transition"
+                className="text-3xl font-bold gradient-text cursor-pointer transition hover:scale-105"
                 onClick={() => setCurrentView('home')}
               >
-                FindMeme
+                🎭 FindMeme
               </h1>
 
               {/* Navigation */}
-              <nav className="flex gap-4">
+              <nav className="flex gap-2">
                 <button
                   onClick={() => setCurrentView('home')}
-                  className={`px-3 py-2 rounded-lg transition ${
+                  className={`px-4 py-2 rounded-lg transition font-medium ${
                     currentView === 'home'
-                      ? 'bg-blue-100 text-blue-700 font-semibold'
-                      : 'text-gray-600 hover:text-gray-900'
+                      ? 'btn-primary'
+                      : 'text-gray-600 hover:bg-gray-100'
                   }`}
                 >
-                  Browse
+                  🏠 Browse
                 </button>
                 {user && (
                   <button
                     onClick={() => setCurrentView('favorites')}
-                    className={`px-3 py-2 rounded-lg transition ${
+                    className={`px-4 py-2 rounded-lg transition font-medium ${
                       currentView === 'favorites'
-                        ? 'bg-blue-100 text-blue-700 font-semibold'
-                        : 'text-gray-600 hover:text-gray-900'
+                        ? 'btn-primary'
+                        : 'text-gray-600 hover:bg-gray-100'
                     }`}
                   >
-                    My Favorites
+                    ❤️ Favorites
                   </button>
                 )}
               </nav>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               {user ? (
                 <>
-                  <span className="text-gray-700">Welcome, {user.username}!</span>
+                  <span className="text-gray-700 font-medium">👋 {user.username}</span>
                   {currentView === 'home' && (
                     <button
                       onClick={() => setShowUpload(!showUpload)}
-                      className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition"
+                      className="btn-primary"
                     >
-                      {showUpload ? 'Close Upload' : 'Upload Meme'}
+                      {showUpload ? '✕ Close' : '📤 Upload'}
                     </button>
                   )}
                   <button
                     onClick={handleLogout}
-                    className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition"
+                    className="btn-secondary"
                   >
-                    Logout
+                    🚪 Logout
                   </button>
                 </>
               ) : (
                 <button
                   onClick={() => setShowAuthModal(true)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition"
+                  className="btn-primary"
                 >
-                  Login / Sign Up
+                  🔐 Login / Sign Up
                 </button>
               )}
             </div>
@@ -161,17 +161,24 @@ function App() {
 
             {/* Loading State */}
             {loading && (
-              <div className="text-center py-12">
-                <p className="text-gray-600 text-lg">Loading memes...</p>
+              <div className="text-center py-12 animate-fadeIn">
+                <div className="spinner mx-auto mb-4"></div>
+                <p className="text-white text-lg font-medium">Loading memes...</p>
               </div>
             )}
 
-            {/* Meme Grid */}
+            {/* Empty State */}
             {!loading && memes.length === 0 && (
-              <div className="text-center py-12">
-                <p className="text-gray-600 text-lg">
-                  No memes found. Upload some to get started!
-                </p>
+              <div className="text-center py-12 animate-fadeIn">
+                <div className="glass p-12 rounded-2xl max-w-md mx-auto">
+                  <div className="text-6xl mb-4">🎭</div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">No memes found</h3>
+                  <p className="text-gray-600">
+                    {searchTerm || filterType
+                      ? 'Try adjusting your search or filters'
+                      : 'Upload some memes to get started!'}
+                  </p>
+                </div>
               </div>
             )}
 

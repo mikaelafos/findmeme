@@ -66,9 +66,9 @@ function MemeCard({ meme, onDelete }) {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition">
+    <div className="glass rounded-2xl overflow-hidden card-hover animate-fadeIn">
       {/* Media */}
-      <div className="aspect-square bg-gray-200 flex items-center justify-center relative">
+      <div className="aspect-square bg-gradient-to-br from-purple-200 to-pink-200 flex items-center justify-center relative group">
         {meme.media_type === 'video' ? (
           <video
             src={meme.media_url}
@@ -79,7 +79,7 @@ function MemeCard({ meme, onDelete }) {
           <img
             src={meme.media_url}
             alt={meme.title}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
         )}
 
@@ -87,11 +87,15 @@ function MemeCard({ meme, onDelete }) {
         {isLoggedIn && (
           <button
             onClick={handleFavoriteToggle}
-            className="absolute top-2 right-2 p-2 bg-white/80 hover:bg-white rounded-full shadow-md transition"
+            className={`absolute top-3 right-3 p-2.5 rounded-full shadow-lg transition-all transform hover:scale-110 ${
+              isFavorited
+                ? 'bg-red-500 text-white hover:bg-red-600'
+                : 'glass-dark text-white hover:bg-white/30'
+            }`}
             title={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
           >
             <svg
-              className={`w-6 h-6 ${isFavorited ? 'fill-red-500 text-red-500' : 'fill-none text-gray-600'}`}
+              className={`w-5 h-5 ${isFavorited ? 'fill-current' : 'fill-none'}`}
               stroke="currentColor"
               strokeWidth="2"
               viewBox="0 0 24 24"
@@ -105,54 +109,58 @@ function MemeCard({ meme, onDelete }) {
             </svg>
           </button>
         )}
+
+        {/* Media Type Badge */}
+        <div className="absolute bottom-3 left-3">
+          <span className="glass-dark px-3 py-1 rounded-full text-xs font-semibold text-white backdrop-blur-md">
+            {meme.media_type === 'video' ? '🎥 Video' : '🖼️ Image'}
+          </span>
+        </div>
       </div>
 
       {/* Content */}
-      <div className="p-4">
-        <h3 className="font-semibold text-gray-900 mb-2">{meme.title}</h3>
+      <div className="p-5">
+        <h3 className="font-bold text-gray-900 mb-3 text-lg line-clamp-2">{meme.title}</h3>
 
         {/* Tags */}
         {meme.tags && meme.tags[0] && (
-          <div className="flex flex-wrap gap-2 mb-3">
+          <div className="flex flex-wrap gap-2 mb-4">
             {meme.tags.map((tag, index) => (
               tag && (
                 <span
                   key={index}
-                  className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded"
+                  className="tag"
                 >
-                  {tag}
+                  #{tag}
                 </span>
               )
             ))}
           </div>
         )}
 
-        {/* Type Badge */}
-        <div className="flex items-center justify-between">
-          <span className="text-xs text-gray-500 uppercase">{meme.media_type}</span>
-
-          {/* Delete Button */}
+        {/* Delete Button */}
+        <div className="flex items-center justify-end">
           {showConfirm ? (
             <div className="flex gap-2">
               <button
                 onClick={handleDelete}
-                className="text-xs bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+                className="text-xs bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition font-medium"
               >
-                Confirm
+                ✓ Confirm
               </button>
               <button
                 onClick={() => setShowConfirm(false)}
-                className="text-xs bg-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-400"
+                className="text-xs bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition font-medium"
               >
-                Cancel
+                ✕ Cancel
               </button>
             </div>
           ) : (
             <button
               onClick={() => setShowConfirm(true)}
-              className="text-xs text-red-600 hover:text-red-800"
+              className="text-sm text-red-500 hover:text-red-700 font-medium transition"
             >
-              Delete
+              🗑️ Delete
             </button>
           )}
         </div>
