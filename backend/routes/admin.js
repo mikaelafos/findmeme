@@ -146,15 +146,20 @@ router.post('/list-users', async (req, res) => {
   }
 });
 
-// Temporary endpoint to make a user admin by username and optionally reset password
+// Temporary endpoint to make a user admin by username or email and optionally reset password
 // TODO: Remove this after initial setup
 router.post('/bootstrap-admin', async (req, res) => {
   try {
-    const { username, secret, newPassword } = req.body;
+    const { username, email, secret, newPassword } = req.body;
 
     // Simple secret check - you should set this in your env
     if (secret !== process.env.BOOTSTRAP_SECRET) {
       return res.status(403).json({ error: 'Invalid secret' });
+    }
+
+    // Must provide either username or email
+    if (!username && !email) {
+      return res.status(400).json({ error: 'Must provide username or email' });
     }
 
     // If newPassword is provided, hash it and update
@@ -162,10 +167,18 @@ router.post('/bootstrap-admin', async (req, res) => {
       const bcrypt = require('bcrypt');
       const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-      const result = await pool.query(
-        'UPDATE users SET is_admin = TRUE, password_hash = $1 WHERE username = $2 RETURNING id, username, email, is_admin',
-        [hashedPassword, username]
-      );
+      let result;
+      if (email) {
+        result = await pool.query(
+          'UPDATE users SET is_admin = TRUE, password_hash = $1 WHERE email = $2 RETURNING id, username, email, is_admin',
+          [hashedPassword, email]
+        );
+      } else {
+        result = await pool.query(
+          'UPDATE users SET is_admin = TRUE, password_hash = $1 WHERE username = $2 RETURNING id, username, email, is_admin',
+          [hashedPassword, username]
+        );
+      }
 
       if (result.rows.length === 0) {
         return res.status(404).json({ error: 'User not found' });
@@ -173,10 +186,18 @@ router.post('/bootstrap-admin', async (req, res) => {
 
       res.json({ message: 'User promoted to admin and password reset', user: result.rows[0] });
     } else {
-      const result = await pool.query(
-        'UPDATE users SET is_admin = TRUE WHERE username = $1 RETURNING id, username, email, is_admin',
-        [username]
-      );
+      let result;
+      if (email) {
+        result = await pool.query(
+          'UPDATE users SET is_admin = TRUE WHERE email = $1 RETURNING id, username, email, is_admin',
+          [email]
+        );
+      } else {
+        result = await pool.query(
+          'UPDATE users SET is_admin = TRUE WHERE username = $1 RETURNING id, username, email, is_admin',
+          [username]
+        );
+      }
 
       if (result.rows.length === 0) {
         return res.status(404).json({ error: 'User not found' });
