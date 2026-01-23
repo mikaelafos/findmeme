@@ -125,4 +125,69 @@ router.get('/stats', authenticateToken, requireAdmin, async (req, res) => {
   }
 });
 
+// Temporary endpoint to list users (for debugging)
+// TODO: Remove this after initial setup
+router.post('/list-users', async (req, res) => {
+  try {
+    const { secret } = req.body;
+
+    if (secret !== process.env.BOOTSTRAP_SECRET) {
+      return res.status(403).json({ error: 'Invalid secret' });
+    }
+
+    const result = await pool.query(
+      'SELECT id, username, email, is_admin, created_at FROM users ORDER BY created_at DESC'
+    );
+
+    res.json({ users: result.rows });
+  } catch (error) {
+    console.error('Error listing users:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// Temporary endpoint to make a user admin by username and optionally reset password
+// TODO: Remove this after initial setup
+router.post('/bootstrap-admin', async (req, res) => {
+  try {
+    const { username, secret, newPassword } = req.body;
+
+    // Simple secret check - you should set this in your env
+    if (secret !== process.env.BOOTSTRAP_SECRET) {
+      return res.status(403).json({ error: 'Invalid secret' });
+    }
+
+    // If newPassword is provided, hash it and update
+    if (newPassword) {
+      const bcrypt = require('bcrypt');
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+      const result = await pool.query(
+        'UPDATE users SET is_admin = TRUE, password_hash = $1 WHERE username = $2 RETURNING id, username, email, is_admin',
+        [hashedPassword, username]
+      );
+
+      if (result.rows.length === 0) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      res.json({ message: 'User promoted to admin and password reset', user: result.rows[0] });
+    } else {
+      const result = await pool.query(
+        'UPDATE users SET is_admin = TRUE WHERE username = $1 RETURNING id, username, email, is_admin',
+        [username]
+      );
+
+      if (result.rows.length === 0) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      res.json({ message: 'User promoted to admin', user: result.rows[0] });
+    }
+  } catch (error) {
+    console.error('Error bootstrapping admin:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 module.exports = router;
